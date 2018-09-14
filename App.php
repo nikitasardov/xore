@@ -10,11 +10,17 @@ namespace Xore;
 use Closure;
 use Xore\db\adapters\MySQL;
 
+//инструменты
 require_once __DIR__.'/Route.php';
 require_once __DIR__.'/Request.php';
 require_once __DIR__.'/Log.php';
+
+//работа с БД
 require_once __DIR__.'/db/Model.php';
 require_once __DIR__.'/db/adapters/MySQL.php';
+
+//сервисы
+require_once __DIR__.'/Services/Services.php';
 
 class App
 {

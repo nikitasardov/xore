@@ -49,7 +49,7 @@ abstract class Model
      */
     public function escape(String $string)
     {
-        return $string;
+        return quotemeta($string);
     }
 
     /**
