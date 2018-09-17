@@ -17,7 +17,16 @@ class MySQL
     protected $password;
     protected $link;
 
-    //добавляем параметры для подключения
+
+    /**
+     * добавляем параметры для подключения
+     * MySQL constructor.
+     * @param String $host
+     * @param String $db_name
+     * @param String $port
+     * @param String $username
+     * @param String $password
+     */
     public function __construct(String $host, String $db_name, String $port, String $username, String $password)
     {
         $this->host = $host;
@@ -28,12 +37,19 @@ class MySQL
         $this->link = mysqli_connect($this->host, $this->username, $this->password, $this->db_name, $this->port);
     }
 
-    //получаем соеденение в базу
+
+    /**
+     * получаем соеденение в базу
+     * @return \mysqli
+     */
     public function getLink()
     {
         return $this->link;
     }
 
+    /**
+     * Отключает соеденение
+     */
     public function disconnect()
     {
         mysqli_close($this->link);

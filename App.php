@@ -14,6 +14,7 @@ use Xore\db\adapters\MySQL;
 require_once __DIR__.'/Route.php';
 require_once __DIR__.'/Request.php';
 require_once __DIR__.'/Log.php';
+require_once __DIR__.'/Response.php';
 
 //работа с БД
 require_once __DIR__.'/db/Model.php';
@@ -36,12 +37,30 @@ class App
      */
     protected $result = null;
     /**
+     * если экшен не найден
+     */
+    protected $notFound = [
+        'code' => 404,
+        'response' => null
+    ];
+    /**
+     * Ответ для xhr запросов
+     */
+    protected $response = null;
+    /**
      * подключения к базам, доступно:
      * -MySQL
      */
     protected static $adapters = [];
 
-    //конструктор будет определять метод запроса, и запускать соответстующий метод
+    public function __construct()
+    {
+        $this->response = new Response();
+    }
+
+    /**
+     * конструктор будет определять метод запроса, и запускать соответстующий метод
+     */
     public function init()
     {
         //определяем метод
@@ -59,18 +78,24 @@ class App
                     $this->result = $action(...$route->getParams());
                     break;
                 }else{
-                    $this->result = 'uri is bad';
+                    //not found
+                    $this->response->setCode($this->notFound['code']);
+                    $this->result = $this->notFound['response'];
                 }
             }
         }else{
-            $this->result = 'method not found';
+            //not found
+            $this->response->setCode($this->notFound['code']);
+            $this->result = $this->notFound['response'];
         }
-
         //отключим все адаптеры
         $this->adaptersDisconnect();
     }
 
-    //выключим соеденение с базой
+
+    /**
+     * выключим соеденение с базой
+     */
     protected function adaptersDisconnect()
     {
         foreach (self::$adapters as $adapter){
@@ -78,47 +103,111 @@ class App
         }
     }
 
-    //получим результат для вывода на экран в формате JSON
-    public function responseJSON() : String
+    /**
+     * получим объект Response
+     * для последующих настроек
+     * @return null|Response
+     */
+    public function getResponse()
     {
-        $this->init();
-        header('Content-Type: application/json');
-        return json_encode($this->result, JSON_UNESCAPED_UNICODE);
+        return $this->response;
     }
 
-    //получим результат для работы с ним в php
+    /**
+     * выводит на экран результат экшена
+     * результат выполнения экшена
+     */
+    public function responseJSON()
+    {
+        $this->init();
+        $this->response
+            ->setContentType('application/json')
+            ->setContent(json_encode($this->result, JSON_UNESCAPED_UNICODE))
+            ->end();
+    }
+
+    /**
+     * получим результат для работы с ним в php
+     * @return mixed
+     */
     public function getResult()
     {
         $this->init();
         return $this->result;
     }
 
-    //добавим подключение к mysqli
-    public static function setMySQL($host, $db_name, $port, $username, $password)
+    /**
+     * добавим подключение к mysqli
+     * @param string $host
+     * @param string $db_name
+     * @param string $port
+     * @param string $username
+     * @param string $password
+     */
+    public static function setMySQL(string $host, string $db_name, string $port, string $username, string $password)
     {
         $mysql = new MySQL($host, $db_name, $port, $username, $password);
         self::$adapters['mysqli'] = $mysql;
     }
 
-    //получим подключение к mysqli
+    /**
+     * получим подключение к mysqli
+     * @return mixed
+     */
     public static function getMySQL()
     {
         return empty(self::$adapters['mysqli']) ? null : self::$adapters['mysqli']->getLink();
     }
 
-    //добавим экшены
-    public function get(String $url,Closure $action)
+    /**
+     * данные, которые будут выданы, если
+     * не один route не подошел
+     * @param array $response
+     * @param int $code
+     */
+    public function notFound(array $response, int $code = 404)
+    {
+        $this->notFound = [
+            'response' => $response,
+            'code' => $code
+        ];
+    }
+
+    /**
+     * добавим экшены get запроса
+     * @param String $url
+     * @param Closure $action
+     */
+    public function get(String $url, Closure $action)
     {
         $this->get[$url] = $action;
     }
+
+    /**
+     * добавим экшены post запроса
+     * @param String $url
+     * @param Closure $action
+     */
     public function post(String $url,Closure $action)
     {
         $this->post[$url] = $action;
     }
+
+    /**
+     * добавим экшены put запроса
+     * @param String $url
+     * @param Closure $action
+     */
     public function put(String $url,Closure $action)
     {
         $this->put[$url] = $action;
     }
+
+    /**
+     * добавим экшены delete запроса
+     * @param String $url
+     * @param Closure $action
+     */
     public function delete(String $url,Closure $action)
     {
         $this->delete[$url] = $action;

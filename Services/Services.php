@@ -15,7 +15,10 @@ require_once 'Curl.php';
 class Services
 {
 
-    //получим cURL
+    /**
+     * получим cURL
+     * @return \Curl
+     */
     public static function getCurl()
     {
         return new \Curl();

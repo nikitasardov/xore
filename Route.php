@@ -18,7 +18,11 @@ class Route
     //количество частей в uri
     protected $count_path = 0;
 
-    public function __construct($uri)
+    /**
+     * Route constructor.
+     * @param string $uri
+     */
+    public function __construct(string $uri)
     {
         //сохраним ведёный uri
         $this->custom_uri = $uri;
@@ -39,8 +43,13 @@ class Route
         }
     }
 
-    //проверим, uri схожи или нет
-    public function test($uri) : bool
+
+    /**
+     * проверим, uri схожи или нет
+     * @param String $uri
+     * @return bool
+     */
+    public function test(string $uri) : bool
     {
         //разделим введёный uri на части
         $paths = explode('/', $uri);
@@ -50,6 +59,8 @@ class Route
 
         //если они совпали, дальнейшая проверка и не нужна
         if($is_active === false){
+            //пусть будут активен
+            $is_active = true;
             //переберём точки сопрекоснавения что бы проверить
             //наш ли это uri
             foreach ($this->const_path as $index => $path){
@@ -75,7 +86,11 @@ class Route
         }
     }
 
-    //получим параметры из uri
+
+    /**
+     * получим параметры из uri
+     * @return array
+     */
     public function getParams() : array
     {
         return $this->params;

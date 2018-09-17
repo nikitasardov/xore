@@ -11,6 +11,12 @@ namespace Xore;
 
 class Log
 {
+    /**
+     * пишет в лог файл
+     * @param $data
+     * @param string $filename
+     * @return bool|int
+     */
     public static function dump($data, $filename = 'dump.log')
     {
         ob_start();
