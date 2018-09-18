@@ -24,7 +24,6 @@ abstract class Model
     //id последней записи
     protected $id;
 
-
     public function __construct(String $table)
     {
         $this->link = App::getMySQL();

@@ -17,7 +17,6 @@ class MySQL
     protected $password;
     protected $link;
 
-
     /**
      * добавляем параметры для подключения
      * MySQL constructor.
@@ -36,7 +35,6 @@ class MySQL
         $this->password = $password;
         $this->link = mysqli_connect($this->host, $this->username, $this->password, $this->db_name, $this->port);
     }
-
 
     /**
      * получаем соеденение в базу

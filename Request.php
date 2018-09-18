@@ -7,6 +7,9 @@
  */
 namespace Xore;
 
+use Xore\Uploads\Files;
+use Xore\Uploads\RequestFile;
+
 class Request
 {
     /**
@@ -17,7 +20,7 @@ class Request
      * @param null $default
      * @return array|mixed|null
      */
-    protected static function getData(Array $data = null, String $name = null, $default = null)
+    protected static function getData(array $data = null, string $name = null, $default = null)
     {
         if(!empty($name)){
             return $data[$name] ?? $default;
@@ -28,37 +31,43 @@ class Request
 
     /**
      * получить get
-     *
      * @param String|null $name
      * @param null $default
      * @return array|mixed|null
      */
-    public static function get(String $name = null, $default = null)
+    public static function get(string $name = null, $default = null)
     {
         return self::getData($_GET, $name, $default);
     }
 
-
     /**
      * получить post
-     *
      * @param String|null $name
      * @param null $default
      * @return array|mixed|null
      */
-    public static function post(String $name = null, $default = null)
+    public static function post(string $name = null, $default = null)
     {
         return self::getData($_POST, $name, $default);
     }
 
-
     /**
      * получить put
-     *
      * @return bool|string
      */
     public static function put()
     {
         return file_get_contents('php://input');
+    }
+
+    /**
+     * получить один или все файлы
+     * @param string|null $name
+     * @return RequestFile|Files
+     */
+    public static function file(string $name = null)
+    {
+        $files = new Files();
+        return empty($name) ? $files : $files->get($name);
     }
 }

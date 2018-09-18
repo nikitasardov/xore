@@ -116,7 +116,7 @@ class Curl
      */
     public function getResult()
     {
-        $result = json_decode($this->result, JSON_UNESCAPED_UNICODE);
+        $result = json_decode($this->result, true);
         return $result ?? $this->result;
     }
 

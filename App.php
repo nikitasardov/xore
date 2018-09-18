@@ -12,14 +12,13 @@ use Xore\db\adapters\MySQL;
 
 //инструменты
 require_once __DIR__.'/Route.php';
+require_once __DIR__.'/Uploads/Files.php';
 require_once __DIR__.'/Request.php';
 require_once __DIR__.'/Log.php';
 require_once __DIR__.'/Response.php';
-
 //работа с БД
 require_once __DIR__.'/db/Model.php';
 require_once __DIR__.'/db/adapters/MySQL.php';
-
 //сервисы
 require_once __DIR__.'/Services/Services.php';
 
@@ -55,7 +54,10 @@ class App
 
     public function __construct()
     {
+        //используеться для формирования ответа
         $this->response = new Response();
+        //зададим корневой каталог для проекта
+        define('__ROOT__', __DIR__);
     }
 
     /**
