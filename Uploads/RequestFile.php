@@ -30,7 +30,6 @@ class RequestFile
             $this->data = null;
             return;
         }
-
         $this->setData($data['name'], $data['type'], $data['size'], $data['tmp_name'], $data['error']);
     }
 
@@ -74,6 +73,16 @@ class RequestFile
             'tmp_name' => $tmp_name,
             'error' => $error,
         );
+    }
+
+    /**
+     * переведём файл к картинке
+     * @return Image
+     */
+    public function toImage()
+    {
+        $size = getimagesize($this->data['tmp_name']);
+        return new Image($this->data, $size["mime"]);
     }
 
     /**
@@ -129,9 +138,9 @@ class RequestFile
         } else {
             $lastSym = substr($dir, -1);
             if ($lastSym == '/' || $lastSym == '\\') {
-                return $dir.'/'.$this->data['name'];
+                return $dir.'/'.$name;
             } else {
-                return $dir.'/'.$this->data['name'];
+                return $dir.'/'.$name;
             }
         }
     }

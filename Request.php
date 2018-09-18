@@ -63,7 +63,7 @@ class Request
     /**
      * получить один или все файлы
      * @param string|null $name
-     * @return RequestFile|Files
+     * @return RequestFile|Files|null
      */
     public static function file(string $name = null)
     {

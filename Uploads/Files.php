@@ -9,6 +9,7 @@
 namespace Xore\Uploads;
 
 require_once 'RequestFile.php';
+require_once 'Image.php';
 
 
 class Files
@@ -41,11 +42,11 @@ class Files
     /**
      * получить один файл по имени поля
      * @param string $input_name
-     * @return RequestFile
+     * @return RequestFile | null
      */
-    public function get(string $input_name) : RequestFile
+    public function get(string $input_name)
     {
-        return $this->files[$input_name];
+        return $this->files[$input_name] ?? null;
     }
 
     /**
